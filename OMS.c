@@ -15,7 +15,7 @@ create new employees-done
 Overtime hours-done
 calculate salary based on working days and role-done
 delete employee-done
-Attendance logs
+Attendance logs-per ind, cumulative,reset
 Feedback system
 Separate functions for CEO(menu driven) access to emp, feedback-done
 */
@@ -68,6 +68,12 @@ void login()
     }
 
 }
+void begin()
+{
+    printf("\n__________________________________________________________\n");
+    printf("\n____Welcome to our Office Management System______\n");
+    printf("\n__________________________________________________________\n");
+}
 
 void end()
 {
@@ -117,6 +123,7 @@ emp create_emp()
     new.salary=calc_salary(new.wd,new.role);
 	return new;
 }
+
 void readfile()
 {	
 	emp emp1;
@@ -169,7 +176,8 @@ void new_emps()
 }
 
 void del_emp()
-{	int flag=0;
+{	
+	int flag=0;
 	fp1=fopen("datafile.txt","w");
 	for(int i=0;i<count_emp;i++)
 	{
@@ -214,7 +222,8 @@ int check( char u[],char p[])
 }
 
 void add_up()
-{	user u1;
+{	
+	user u1;
 	printf("\nEnter username:");
 	scanf("%s",u1.name);
 	printf("\nEnter password:");
@@ -231,9 +240,44 @@ void add_up()
 	login();
 
 }
+void inc_attendance()
+{
+	for(int i=0;i<count_emp;i++)
+	{
+		emp_array[i].wd++;
+	}
+	writefile();
+
+}
+
+void dec_attendance()
+{	
+	int pv,num;
+	char pname[100];
+	printf("\nEnter name:");
+	scanf("%s",pname);
+	printf("\nEnter absent days:");
+	scanf("%d",&num);
+	int flag=0;
+	for(int i=0;i<count_emp;i++)
+	{	
+		pv=!(strcmp(emp_array[i].name,pname));
+		if(pv)
+		{
+			emp_array[i].wd=emp_array[i].wd-num;
+			flag++;
+		}
+	}
+	if(!flag)
+	{
+		printf("Employee DNE");
+	}
+	writefile();
+}
 
 int main()
-{
+{	
+	begin();
 	int choice;
 	readfile();
 	login();
@@ -247,7 +291,7 @@ int main()
 	switch(c)
 	{
 		case 1:
-			printf("\nEnter 1 to read employee data \nEnter 2 to add new employees\nEnter 3 to fire underperforming employees\nEnter 4 to enter new employee login\nEnter 0 to quit: ");
+			printf("\nEnter 1 to read employee data \nEnter 2 to add new employees\nEnter 3 to fire underperforming employees\nEnter 4 to enter new employee login\nEnter 5 to update attendance\nEnter 6 to remove attendace for employee\nEnter 0 to quit: ");
 			scanf("%d",&choice);
 			while(choice)
 			{	
@@ -271,12 +315,18 @@ int main()
 					case 4:
 						add_up();
 						break;
+					case 5:
+						inc_attendance();
+						break;
+					case 6:
+						dec_attendance();
+						break;
 					default:
 						writefile();
 						break;
 				}
 				printf("\n");
-				printf("\nEnter 1 to read employee data \nEnter 2 to add new employees\nEnter 3 to fire underperforming employees\nEnter 4 to enter new employee login\nEnter 0 to quit: ");
+				printf("\nEnter 1 to read employee data \nEnter 2 to add new employees\nEnter 3 to fire underperforming employees\nEnter 4 to enter new employee login\nEnter 5 to update attendance\nEnter 6 to remove attendace for employee\nEnter 0 to quit: ");
 				scanf("%d",&choice);		
 			}
 			break;
